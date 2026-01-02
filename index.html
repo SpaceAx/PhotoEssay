@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Photo Essay - Bahagia yang Sederhana | Thomas Alfareno Ananta Nugraha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #f5f5f5;
+      overflow-x: hidden;
+    }
+    
+    /* Glassmorphism Background */
+    .dekorasi-bg {
+      pointer-events: none;
+      position: fixed;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      opacity: 0.6;
+    }
+    
+    .dekorasi-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.4;
+      animation: float 15s ease-in-out infinite alternate;
+    }
+    
+    .dekorasi-shape1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, rgba(147, 51, 234, 0.4) 0%, rgba(59, 130, 246, 0.4) 100%);
+      top: -150px;
+      left: -150px;
+      animation-delay: 0s;
+    }
+    
+    .dekorasi-shape2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(120deg, rgba(59, 130, 246, 0.4) 0%, rgba(168, 85, 247, 0.4) 100%);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 2s;
+    }
+    
+    .dekorasi-shape3 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(120deg, rgba(236, 72, 153, 0.4) 0%, rgba(251, 146, 60, 0.4) 100%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 4s;
+    }
+    
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, -40px) scale(1.1); }
+    }
+    
+    /* Welcome Screen - iPhone Style */
+    #welcomeScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #welcomeScreen.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+    
+    .welcome-content {
+      text-align: center;
+      padding: 2rem;
+      animation: welcomeFadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes welcomeFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .welcome-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .welcome-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: #d1d5db;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      margin-top: 1rem;
+    }
+    
+    .welcome-name {
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      color: #fbbf24;
+      font-weight: 600;
+      margin-top: 2rem;
+      letter-spacing: 0.02em;
+    }
+    
+    .welcome-class {
+      font-size: clamp(0.875rem, 2vw, 1.25rem);
+      color: #9ca3af;
+      margin-top: 0.5rem;
+    }
+    
+    /* Setup Screen */
+    #setupScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #setupScreen.show {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .setup-card {
+      background: rgba(30, 30, 46, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 2rem;
+      padding: 3rem;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: setupSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes setupSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .setup-icon {
+      font-size: 4rem;
+      color: #fbbf24;
+      margin-bottom: 1.5rem;
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .setup-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 1rem;
+    }
+    
+    .setup-text {
+      color: #d1d5db;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    
+    .setup-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    .btn {
+      padding: 0.75rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: #0a0a0a;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f5f5f5;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    #mainContent {
+      display: none;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      opacity: 0;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #mainContent.show {
+      display: block;
+      opacity: 1;
+    }
+    
+    /* Audio Player Toggle Button */
+    .audio-toggle-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1001;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      border: none;
+      color: #0a0a0a;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .audio-toggle-btn:hover {
+      transform: scale(1.1) translateY(-3px);
+      box-shadow: 0 15px 40px rgba(251, 191, 36, 0.6);
+    }
+    
+    
+    /* Audio Player */
+    .audio-player-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1000;
+      width: 380px;
+      max-width: calc(100vw - 2rem);
+      background: rgba(30, 30, 46, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .audio-player-container.hidden {
+      transform: translateY(calc(100% + 2rem));
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .audio-player-container:hover {
+      transform: translateY(-5px);
+    }
+    
+    .audio-player-container.hidden:hover {
+      transform: translateY(calc(100% + 2rem));
+    }
+    
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .play-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      border: none;
+      color: #0a0a0a;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    
+    .play-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+    }
+    
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .player-title {
+      font-weight: 600;
+      color: #fbbf24;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .player-artist {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+    
+    .progress-container {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+    
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 0.5rem;
+    }
+    
+    /* Visualizer - Cava Style */
+    .visualizer-container {
+      height: 100px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3px;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 0.75rem;
+      border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+    
+    .visualizer-bar {
+      width: 8px;
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+      border-radius: 4px 4px 0 0;
+      min-height: 3px;
+      transition: height 0.05s linear;
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    }
+    
+    .visualizer-bar:nth-child(odd) {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    }
+    
+    /* Lyrics Display */
+    .lyrics-container {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+      scroll-behavior: smooth;
+    }
+    
+    .lyrics-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .lyrics-container::-webkit-scrollbar-thumb {
+      background: #fbbf24;
+      border-radius: 3px;
+    }
+    
+    .lyrics-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .lyric-line {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .lyric-line.active {
+      background: linear-gradient(90deg, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0.1) 100%);
+      border-left: 4px solid #fbbf24;
+      transform: translateX(8px);
+      box-shadow: -4px 0 20px rgba(251, 191, 36, 0.3);
+      padding-left: 1rem;
+    }
+    
+    .lyric-time {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-right: 0.5rem;
+    }
+    
+    .lyric-chinese {
+      font-size: 0.9rem;
+      color: #f5f5f5;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+    
+    .lyric-pinyin {
+      font-size: 0.75rem;
+      color: #d1d5db;
+      font-style: italic;
+      margin-bottom: 0.25rem;
+    }
+    
+    .lyric-indonesian {
+      font-size: 0.85rem;
+      color: #fbbf24;
+      line-height: 1.4;
+    }
+    
+    .lyric-line.active .lyric-chinese {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+    
+    .lyric-line.active .lyric-indonesian {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+    
+    /* Photo Essay Slides */
+    .essay-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    .essay-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .essay-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+    
+    .essay-subtitle {
+      font-size: 1.25rem;
+      color: #d1d5db;
+      font-weight: 300;
+      font-style: italic;
+    }
+    
+    .essay-author {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #9ca3af;
+    }
+    
+    .slide {
+      margin-bottom: 6rem;
+      opacity: 0;
+      transform: translateY(80px);
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .slide.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .slide-content {
+      background: rgba(30, 30, 46, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      border-radius: 2rem;
+      padding: 3rem;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(251, 191, 36, 0.1) inset;
+      transition: all 0.3s ease;
+    }
+    
+    .slide-content:hover {
+      border-color: rgba(251, 191, 36, 0.4);
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(251, 191, 36, 0.15) inset;
+      transform: translateY(-5px);
+    }
+    
+    .slide-image {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 1.25rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+    }
+    
+    .slide-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    }
+    
+    .slide-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 1.5rem;
+    }
+    
+    .slide-quote {
+      font-size: 1.5rem;
+      color: #f5f5f5;
+      font-style: italic;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border-left: 4px solid #fbbf24;
+      background: rgba(251, 191, 36, 0.05);
+      border-radius: 0.5rem;
+    }
+    
+    .slide-text {
+      font-size: 1.125rem;
+      line-height: 1.8;
+      color: #d1d5db;
+      margin-bottom: 1rem;
+    }
+    
+    .slide-author {
+      text-align: right;
+      font-size: 1rem;
+      color: #9ca3af;
+      margin-top: 2rem;
+      font-style: italic;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .audio-toggle-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        bottom: 1rem;
+        right: 1rem;
+      }
+      
+      
+      .audio-player-container {
+        width: calc(100vw - 2rem);
+        right: 1rem;
+        bottom: 1rem;
+        padding: 1.25rem;
+      }
+      
+      .audio-player-container.hidden {
+        transform: translateY(calc(100% + 1rem));
+      }
+      
+      .visualizer-container {
+        height: 70px;
+        gap: 2px;
+      }
+      
+      .visualizer-bar {
+        width: 6px;
+      }
+      
+      .lyrics-container {
+        max-height: 150px;
+      }
+      
+      .slide-content {
+        padding: 2rem 1.5rem;
+      }
+      
+      .slide-image {
+        height: 300px;
+      }
+      
+      .slide-title {
+        font-size: 2rem;
+      }
+      
+      .slide-quote {
+        font-size: 1.25rem;
+        padding: 1rem;
+      }
+      
+      .setup-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .welcome-title {
+        font-size: 2.5rem;
+      }
+      
+      .essay-title {
+        font-size: 2.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .essay-container {
+        padding: 2rem 1rem;
+      }
+      
+      .slide-content {
+        padding: 1.5rem 1rem;
+      }
+      
+      .slide-title {
+        font-size: 1.75rem;
+      }
+      
+      .slide-text {
+        font-size: 1rem;
+      }
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1a1a2e;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Decoration -->
+  <div class="dekorasi-bg" aria-hidden="true">
+    <div class="dekorasi-shape dekorasi-shape1"></div>
+    <div class="dekorasi-shape dekorasi-shape2"></div>
+    <div class="dekorasi-shape dekorasi-shape3"></div>
+  </div>
+  
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen">
+    <div class="welcome-content">
+      <div class="welcome-title">Photo Essay</div>
+      <div class="welcome-subtitle">Bahagia yang Sederhana</div>
+      <div class="welcome-name">Thomas Alfareno Ananta Nugraha</div>
+      <div class="welcome-class">XII-B | SMAN 4 Tuban</div>
+    </div>
+  </div>
+  
+  <!-- Setup Screen -->
+  <div id="setupScreen">
+    <div class="setup-card">
+      <div class="setup-icon">
+        <i class="fas fa-music"></i>
+      </div>
+      <div class="setup-title">Putar Musik?</div>
+      <div class="setup-text">
+        Website ini memiliki musik latar belakang yang dapat memperkaya pengalaman membaca photo essay Anda.
+      </div>
+      <div class="setup-buttons">
+        <button class="btn btn-primary" id="allowMusic">Izinkan</button>
+        <button class="btn btn-secondary" id="skipMusic">Lewati</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div id="mainContent">
+    <div class="essay-container">
+      <!-- Header -->
+      <div class="essay-header">
+        <h1 class="essay-title">Bahagia yang Sederhana</h1>
+        <p class="essay-subtitle">Kisah Perjalanan Menemukan Makna Hidup</p>
+        <p class="essay-author">Oleh: Thomas Alfareno Ananta Nugraha</p>
+      </div>
+      
+      <!-- Slide 1: Puncak Rengit -->
+      <div class="slide" data-slide="1">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 01.30.51_3ee45869.jpg" alt="Puncak Rengit" class="slide-image">
+          <h2 class="slide-title">Puncak Rengit</h2>
+          <p class="slide-text">
+            Langkahku membawaku menuju sebuah tempat yang menyimpan keindahan dan ketenangan Puncak Rengit. 
+            Bukit tertinggi di Kabupaten Tuban ini berdiri anggun di Desa Ngrejeng, Kecamatan Grabagan, 
+            seolah menjadi saksi bisu keindahan alam yang Tuhan ciptakan.
+          </p>
+          <p class="slide-quote">
+            "Di sini aku belajar, bahwa kebahagiaan kadang sederhana: alam, tawa, dan rasa syukur."
+          </p>
+          <p class="slide-text">
+            Setiap langkah menuju puncak terasa seperti perjalanan kecil menuju kebahagiaan. 
+            Hembusan angin sejuk menyapa kulit, pemandangan luas terbentang sejauh mata memandang, 
+            dan langit biru seolah tersenyum menyambut kedatanganku. Di atas puncak ini, 
+            rasanya dunia sejenak melambat, dan segala penat pelan-pelan menghilang.
+          </p>
+          <p class="slide-author">— Thomas Alfareno Ananta Nugraha</p>
+        </div>
+      </div>
+      
+      <!-- Slide 2: Natal -->
+      <div class="slide" data-slide="2">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 01.40.18_32901cfb.jpg" alt="Natal Keluarga" class="slide-image">
+          <h2 class="slide-title">Allah Hadir untuk Menyelamatkan Keluarga</h2>
+          <p class="slide-text">
+            Natal kali ini menjadi momen yang begitu hangat dan bermakna. 
+            Dengan tema "Allah Hadir untuk Menyelamatkan Keluarga," kami merasakan kehadiran Tuhan 
+            bukan hanya dalam doa, tetapi juga dalam setiap tawa, kebersamaan, dan cinta yang menyatukan keluarga.
+          </p>
+          <p class="slide-quote">
+            "Natal bukan hanya tentang hadiah, tetapi tentang kehadiran Tuhan yang menyatukan dan memberkati setiap keluarga."
+          </p>
+          <p class="slide-text">
+            Di tengah kesederhanaan, ada sukacita yang melimpah. Di balik doa yang terucap, 
+            ada harapan yang kembali hidup. Natal bukan sekadar perayaan, tetapi pengingat bahwa 
+            Tuhan selalu dekat—memeluk, menjaga, dan menyertai setiap langkah keluarga.
+          </p>
+          <p class="slide-author">— Thomas Alfareno Ananta Nugraha</p>
+        </div>
+      </div>
+      
+      <!-- Slide 3: Coding Project -->
+      <div class="slide" data-slide="3">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 02.49.00_4f74b4ea.jpg" alt="Coding Project" class="slide-image">
+          <h2 class="slide-title">Irama yang Hidup dari Barisan Kode</h2>
+          <p class="slide-text">
+            Di sela waktu liburan, aku tidak hanya menikmati alam dan kebersamaan dengan keluarga, 
+            tetapi juga mengisi hari dengan hal yang aku sukai: berkarya melalui teknologi. 
+            Salah satu hal yang kulakukan adalah membuat sebuah program audio player sendiri 
+            menggunakan bash scripting, playerctl metadata, dan Cava sebagai visualizer.
+          </p>
+          <p class="slide-quote">
+            "Bukan hanya musik yang berbunyi, tetapi juga semangat untuk terus belajar dan berkarya."
+          </p>
+          <p class="slide-text">
+            Di layar komputer, barisan kode bukan sekadar tulisan tanpa makna. Setiap barisnya adalah logika, 
+            setiap perintahnya adalah kreativitas. Saat program berjalan, musik pun mengalun, 
+            dan visualizer bergerak mengikuti irama seolah teknologi dan seni saling bersalaman.
+          </p>
+          <p class="slide-author">— Thomas Alfareno Ananta Nugraha</p>
+        </div>
+      </div>
+      
+      <!-- Additional Slides with Images -->
+      <div class="slide" data-slide="4">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 02.51.08_446744cf.jpg" alt="Momen Bahagia" class="slide-image">
+          <h2 class="slide-title">Momen Sederhana yang Berarti</h2>
+          <p class="slide-text">
+            Kebahagiaan sejati tidak selalu datang dari hal-hal besar. Terkadang, 
+            momen sederhana seperti ini yang memberikan makna terbesar dalam hidup. 
+            Setiap foto menceritakan kisah, setiap detik membawa kenangan.
+          </p>
+        </div>
+      </div>
+      
+      <div class="slide" data-slide="5">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 03.01.02_65a5d952.jpg" alt="Kenangan Indah" class="slide-image">
+          <h2 class="slide-title">Kenangan yang Abadi</h2>
+          <p class="slide-text">
+            Dalam kesederhanaan, kita menemukan keindahan. Dalam kebersamaan, kita menemukan kekuatan. 
+            Setiap momen adalah anugerah, setiap kenangan adalah harta yang tak ternilai.
+          </p>
+        </div>
+      </div>
+      
+      <div class="slide" data-slide="6">
+        <div class="slide-content">
+          <img src="./WhatsApp Image 2026-01-02 at 03.02.09_7e0020c6.jpg" alt="Refleksi" class="slide-image">
+          <h2 class="slide-title">Refleksi Perjalanan</h2>
+          <p class="slide-text">
+            Melihat ke belakang, perjalanan ini mengajarkanku banyak hal. 
+            Tentang kebahagiaan yang sederhana, tentang syukur yang mendalam, 
+            dan tentang arti hidup yang sesungguhnya.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Audio Player Toggle Button -->
+  <button class="audio-toggle-btn" id="audioToggleBtn" title="Toggle Audio Player" style="display: none;">
+    <i class="fas fa-music"></i>
+  </button>
+  
+  <!-- Audio Player -->
+  <div class="audio-player-container" id="audioPlayer" style="display: none;">
+    <div class="visualizer-container" id="visualizer">
+      <!-- Bars will be generated by JS -->
+    </div>
+    <div class="player-controls">
+      <button class="play-btn" id="playPauseBtn">
+        <i class="fas fa-play"></i>
+      </button>
+      <div class="player-info">
+        <div class="player-title">轻舞 (Qīng Wǔ)</div>
+        <div class="player-artist">陈抒妮</div>
+      </div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+    <div class="lyrics-container" id="lyricsContainer">
+      <!-- Lyrics will be populated by JS -->
+    </div>
+    <audio id="backgroundMusic" loop preload="auto">
+      <source src="audio/music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  
+  <script>
+    // Lyrics Data
+    const lyrics = [
+      { time: 8.91, chinese: "轻舞（soft music and graceful dances）", pinyin: "qīng wǔ", indonesian: "Menari dengan lembut (musik lembut dan tarian anggun)" },
+      { time: 11.57, chinese: "作词：陈可心", pinyin: "zuò cí: chén kě xīn", indonesian: "Lirik: Chen Kexin" },
+      { time: 15.56, chinese: "作曲：陈抒妮", pinyin: "zuò qǔ: chén shū ní", indonesian: "Komposer: Chen Shuni" },
+      { time: 32.56, chinese: "当春江花 与月夜连成画", pinyin: "dāng chūn jiāng huā yǔ yuè yè lián chéng huà", indonesian: "Saat bunga di sungai musim semi bersatu dengan malam bulan, menjadi lukisan" },
+      { time: 38.14, chinese: "就别再哭 去轻舞", pinyin: "jiù bié zài kū qù qīng wǔ", indonesian: "Jangan menangis lagi, menarilah dengan ringan" },
+      { time: 43.71, chinese: "浮生若梦 去品读 别背诵", pinyin: "fú shēng ruò mèng qù pǐn dú bié bèi sòng", indonesian: "Hidup seperti mimpi, hayati saja… jangan hanya dihafal" },
+      { time: 49.29, chinese: "像蝉翼轻盈吧", pinyin: "xiàng chán yì qīng yíng ba", indonesian: "Ringanlah seperti sayap jangkrik musim panas" },
+      { time: 55.14, chinese: "有幸成为 雨中迷路的人", pinyin: "yǒu xìng chéng wéi yǔ zhōng mí lù de rén", indonesian: "Beruntunglah bisa menjadi orang yang tersesat dalam hujan" },
+      { time: 60.45, chinese: "才晓得松开的手", pinyin: "cái xiǎo de sōng kāi de shǒu", indonesian: "Baru mengerti… tangan yang melepaskan genggaman itu" },
+      { time: 66.03, chinese: "叫我轻松的最将我看重", pinyin: "jiào wǒ qīng sōng de zuì jiāng wǒ kàn zhòng", indonesian: "Dialah yang membiarkanku bebas, tapi justru paling menghargai diriku" },
+      { time: 71.61, chinese: "她站在我回眸中", pinyin: "tā zhàn zài wǒ huí móu zhōng", indonesian: "Dia berdiri dalam balik tatapanku yang kembali" },
+      { time: 77.45, chinese: "握不住风 就成为风", pinyin: "wò bù zhù fēng jiù chéng wéi fēng", indonesian: "Jika tak bisa menggenggam angin, maka jadilah angin itu" },
+      { time: 82.77, chinese: "要无拘的去寻梦", pinyin: "yào wú jū de qù xún mèng", indonesian: "Pergilah mengejar mimpi tanpa batas" },
+      { time: 88.61, chinese: "追不上光 就成为光", pinyin: "zhuī bú shàng guāng jiù chéng wéi guāng", indonesian: "Jika tak bisa mengejar cahaya, maka jadilah cahaya" },
+      { time: 93.92, chinese: "去点亮自己的天堂", pinyin: "qù diǎn liàng zì jǐ de tiān táng", indonesian: "Untuk menyinari surgamu sendiri" },
+      { time: 101.63, chinese: "假如我 只顾追向那 天之涯", pinyin: "jiǎ rú wǒ zhǐ gù zhuī xiàng nà tiān zhī yá", indonesian: "Jika suatu hari aku hanya sibuk mengejar hingga ke ujung langit" },
+      { time: 107.21, chinese: "提醒我 别忘了牵挂 月光之下的盼呐", pinyin: "tí xǐng wǒ bié wàng le qiān guà yuè guāng zhī xià de pàn na", indonesian: "Ingatkan aku… jangan lupa kerinduan di bawah sinar bulan itu" },
+      { time: 112.78, chinese: "轻舞吧 别负那泪花", pinyin: "qīng wǔ ba bié fù nà lèi huā", indonesian: "Menarilah dengan lembut… jangan sia-siakan air mata itu" },
+      { time: 115.71, chinese: "让伤疤 成情话", pinyin: "ràng shāng bā chéng qíng huà", indonesian: "Biarkan luka berubah menjadi kisah cinta" },
+      { time: 119.16, chinese: "轻轻唤着我开花", pinyin: "qīng qīng huàn zhe wǒ kāi huā", indonesian: "Lembut memanggilku untuk kembali mekar" },
+      { time: 123.94, chinese: "假如那 来日风飞沙 我不怕", pinyin: "jiǎ rú nà lái rì fēng fēi shā wǒ bù pà", indonesian: "Jika suatu hari badai pasir bertiup, aku takkan takut" },
+      { time: 129.52, chinese: "我知道 有一颗月亮 阅过流年仍在那", pinyin: "wǒ zhī dào yǒu yī kē yuè liàng yuè guò liú nián réng zài nà", indonesian: "Karena aku tahu… ada bulan yang tetap di sana, meski waktu terus berlalu" },
+      { time: 135.10, chinese: "轻舞吧 过往如裙纱", pinyin: "qīng wǔ ba guò wǎng rú qún shā", indonesian: "Menarilah dengan lembut… masa lalu hanyalah kain gaun tipis" },
+      { time: 138.02, chinese: "请更坚定的出发", pinyin: "qǐng gèng jiān dìng de chū fā", indonesian: "Berangkatlah dengan keyakinan yang lebih kuat" },
+      { time: 141.74, chinese: "向天涯 也向家", pinyin: "xiàng tiān yá yě xiàng jiā", indonesian: "Menuju ujung dunia… tapi juga menuju rumah" },
+      { time: 155.55, chinese: "握不住风 就成为风", pinyin: "wò bù zhù fēng jiù chéng wéi fēng", indonesian: "Jika tak bisa menggenggam angin, jadilah angin" },
+      { time: 160.87, chinese: "要无拘的去寻梦", pinyin: "yào wú jū de qù xún mèng", indonesian: "Kejar mimpi tanpa ikatan" },
+      { time: 166.71, chinese: "追不上光 就成为光", pinyin: "zhuī bú shàng guāng jiù chéng wéi guāng", indonesian: "Jika tak bisa mengejar cahaya, jadilah cahaya" },
+      { time: 172.02, chinese: "去点亮自己的天堂", pinyin: "qù diǎn liàng zì jǐ de tiān táng", indonesian: "Untuk menerangi surgamu sendiri" },
+      { time: 179.73, chinese: "假如我 只顾追向那 天之涯", pinyin: "jiǎ rú wǒ zhǐ gù zhuī xiàng nà tiān zhī yá", indonesian: "Jika suatu hari aku hanya sibuk mengejar ke ujung langit" },
+      { time: 185.31, chinese: "提醒我 别忘了牵挂 月光之下的盼呐", pinyin: "tí xǐng wǒ bié wàng le qiān guà yuè guāng zhī xià de pàn na", indonesian: "Ingatkan aku… jangan lupa kerinduan di bawah sinar bulan" },
+      { time: 191.15, chinese: "轻舞吧 别负那泪花", pinyin: "qīng wǔ ba bié fù nà lèi huā", indonesian: "Menarilah lembut, jangan sia-siakan air mata itu" },
+      { time: 193.69, chinese: "让伤疤 成情话", pinyin: "ràng shāng bā chéng qíng huà", indonesian: "Biarkan luka menjadi kisah yang indah" },
+      { time: 197.14, chinese: "轻轻唤着我开花", pinyin: "qīng qīng huàn zhe wǒ kāi huā", indonesian: "Dengan lembut memanggilku untuk kembali mekar" },
+      { time: 202.19, chinese: "假如那 来日风飞沙 我不怕", pinyin: "jiǎ rú nà lái rì fēng fēi shā wǒ bù pà", indonesian: "Jika nanti badai datang, aku takkan takut" },
+      { time: 207.77, chinese: "我知道 有一颗月亮 阅过流年仍在那", pinyin: "wǒ zhī dào yǒu yī kē yuè liàng yuè guò liú nián réng zài nà", indonesian: "Aku tahu… ada bulan yang tetap di sana meski waktu berlalu" },
+      { time: 213.35, chinese: "轻舞吧 过往如裙纱", pinyin: "qīng wǔ ba guò wǎng rú qún shā", indonesian: "Menarilah… masa lalu hanyalah kain tipis yang terulur" },
+      { time: 216.00, chinese: "请更坚定的出发", pinyin: "qǐng gèng jiān dìng de chū fā", indonesian: "Berangkatlah dengan tekad lebih kuat" },
+      { time: 219.99, chinese: "向天涯 也向家", pinyin: "xiàng tiān yá yě xiàng jiā", indonesian: "Menuju ujung langit… sekaligus pulang ke rumah" }
+    ];
+    
+    // Initialize
+    let currentLyricIndex = -1;
+    let audioContext;
+    let analyser;
+    let dataArray;
+    let animationFrameId;
+    
+    // Wait for DOM to be ready
+    function initApp() {
+      // Setup Screen -> Main Content
+      const allowMusicBtn = document.getElementById('allowMusic');
+      const skipMusicBtn = document.getElementById('skipMusic');
+      
+      if (allowMusicBtn) {
+        allowMusicBtn.addEventListener('click', () => {
+          showMainContent(true);
+        });
+      }
+      
+      if (skipMusicBtn) {
+        skipMusicBtn.addEventListener('click', () => {
+          showMainContent(false);
+        });
+      }
+      
+      // Welcome Screen -> Setup Screen
+      setTimeout(() => {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        if (welcomeScreen) {
+          welcomeScreen.classList.add('fade-out');
+          setTimeout(() => {
+            welcomeScreen.style.display = 'none';
+            const setupScreen = document.getElementById('setupScreen');
+            if (setupScreen) {
+              setupScreen.classList.add('show');
+            }
+          }, 1000);
+        }
+      }, 3000);
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+    
+    function showMainContent(enableMusic) {
+      const setupScreen = document.getElementById('setupScreen');
+      setupScreen.style.opacity = '0';
+      setTimeout(() => {
+        setupScreen.classList.remove('show');
+        const mainContent = document.getElementById('mainContent');
+        mainContent.classList.add('show');
+        
+        if (enableMusic) {
+          initAudioPlayer();
+          
+          // Auto play after user interaction (button click)
+          setTimeout(() => {
+            const audio = document.getElementById('backgroundMusic');
+            if (audio) {
+              // Set volume to 100%
+              audio.volume = 1.0;
+              
+              // Try to play
+              const playPromise = audio.play();
+              if (playPromise !== undefined) {
+                playPromise
+                  .then(() => {
+                    console.log('✅ Auto-play successful after user permission');
+                    // Update play button icon
+                    const playBtn = document.getElementById('playPauseBtn');
+                    if (playBtn) {
+                      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    }
+                  })
+                  .catch(err => {
+                    console.log('⚠️ Auto-play blocked (user needs to click play):', err.message);
+                    // This is normal - browser blocks autoplay, user needs to click play button
+                  });
+              }
+            }
+          }, 300);
+        }
+        
+        initSlides();
+      }, 500);
+    }
+    
+    // Audio Player Toggle
+    function toggleAudioPlayer() {
+      const audioPlayer = document.getElementById('audioPlayer');
+      const toggleBtn = document.getElementById('audioToggleBtn');
+      const icon = toggleBtn.querySelector('i');
+      
+      if (audioPlayer.classList.contains('hidden')) {
+        // Show player
+        audioPlayer.classList.remove('hidden');
+        icon.className = 'fas fa-chevron-down';
+        toggleBtn.title = 'Sembunyikan Audio Player';
+      } else {
+        // Hide player
+        audioPlayer.classList.add('hidden');
+        icon.className = 'fas fa-music';
+        toggleBtn.title = 'Tampilkan Audio Player';
+      }
+    }
+    
+    // Audio Player
+    function initAudioPlayer() {
+      const audioPlayer = document.getElementById('audioPlayer');
+      const toggleBtn = document.getElementById('audioToggleBtn');
+      
+      audioPlayer.style.display = 'block';
+      toggleBtn.style.display = 'flex';
+      
+      // Setup toggle button (only add listener once)
+      if (!toggleBtn.hasAttribute('data-listener-attached')) {
+        toggleBtn.addEventListener('click', toggleAudioPlayer);
+        toggleBtn.setAttribute('data-listener-attached', 'true');
+      }
+      toggleBtn.querySelector('i').className = 'fas fa-chevron-down';
+      toggleBtn.title = 'Sembunyikan Audio Player';
+      
+      const audio = document.getElementById('backgroundMusic');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const progressBar = document.getElementById('progressBar');
+      const progressFill = document.getElementById('progressFill');
+      const currentTimeEl = document.getElementById('currentTime');
+      const durationEl = document.getElementById('duration');
+      
+      // Create visualizer bars - Cava style (more bars for better visualization)
+      const visualizer = document.getElementById('visualizer');
+      const barCount = 48; // More bars for smoother visualization
+      for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'visualizer-bar';
+        visualizer.appendChild(bar);
+      }
+      
+      // Initialize audio context for visualization
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256; // Higher for better frequency resolution
+        analyser.smoothingTimeConstant = 0.8; // Smooth transitions like Cava
+        const source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        console.log('Audio context initialized successfully');
+      } catch (e) {
+        console.warn('Web Audio API not fully supported:', e);
+        // Continue without visualization if audio context fails
+      }
+      
+      // Format time
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+      
+      // Error handling dengan detail lebih lengkap
+      audio.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        console.error('Audio error details:', {
+          error: audio.error,
+          code: audio.error ? audio.error.code : 'unknown',
+          message: audio.error ? audio.error.message : 'unknown',
+          networkState: audio.networkState,
+          readyState: audio.readyState,
+          src: audio.src,
+          currentSrc: audio.currentSrc
+        });
+        
+        let errorText = 'Error loading audio file. ';
+        if (audio.error) {
+          switch(audio.error.code) {
+            case audio.error.MEDIA_ERR_ABORTED:
+              errorText += 'Playback aborted.';
+              break;
+            case audio.error.MEDIA_ERR_NETWORK:
+              errorText += 'Network error. Check if audio/music.mp3 exists.';
+              break;
+            case audio.error.MEDIA_ERR_DECODE:
+              errorText += 'Decode error. File may be corrupted.';
+              break;
+            case audio.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+              errorText += 'Format not supported or file not found.';
+              break;
+            default:
+              errorText += 'Unknown error.';
+          }
+        }
+        
+        const errorMsg = document.createElement('div');
+        errorMsg.id = 'audioErrorMsg';
+        errorMsg.style.cssText = 'color: #ef4444; padding: 0.75rem; text-align: center; font-size: 0.875rem; background: rgba(239, 68, 68, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;';
+        errorMsg.innerHTML = `<strong>⚠️ ${errorText}</strong><br>
+          <small>Path: ${audio.currentSrc || audio.src || 'audio/music.mp3'}</small><br>
+          <small style="color: #fbbf24; margin-top: 0.5rem; display: block;">
+            💡 Tip: Jika membuka file langsung (file://), gunakan web server lokal seperti Live Server di VS Code
+          </small>`;
+        
+        // Remove existing error message if any
+        const existingError = audioPlayer.querySelector('#audioErrorMsg');
+        if (existingError) {
+          existingError.remove();
+        }
+        audioPlayer.insertBefore(errorMsg, audioPlayer.firstChild);
+      });
+      
+      // Success handlers
+      audio.addEventListener('loadedmetadata', () => {
+        console.log('Audio metadata loaded:', {
+          duration: audio.duration,
+          src: audio.currentSrc,
+          readyState: audio.readyState
+        });
+        if (audio.duration && !isNaN(audio.duration)) {
+          durationEl.textContent = formatTime(audio.duration);
+        }
+        // Remove error message if loading succeeds
+        const errorMsg = audioPlayer.querySelector('#audioErrorMsg');
+        if (errorMsg) {
+          errorMsg.remove();
+        }
+      });
+      
+      audio.addEventListener('canplay', () => {
+        console.log('Audio can play');
+        // Remove error message if loading succeeds
+        const errorMsg = audioPlayer.querySelector('#audioErrorMsg');
+        if (errorMsg) {
+          errorMsg.remove();
+        }
+      });
+      
+      audio.addEventListener('loadstart', () => {
+        console.log('Audio loading started');
+      });
+      
+      // Try to load audio
+      console.log('Attempting to load audio from:', audio.src);
+      console.log('Available sources:', Array.from(audio.querySelectorAll('source')).map(s => s.src));
+      
+      // Ensure audio src is set correctly
+      if (!audio.src || !audio.currentSrc) {
+        // Audio src should be set via <source> tag, but if not, set it directly
+        console.log('Audio src:', audio.src);
+        console.log('Audio currentSrc:', audio.currentSrc);
+      }
+      
+      audio.load();
+      
+      // Check after a delay if audio loaded
+      setTimeout(() => {
+        console.log('Audio state after load:', {
+          networkState: audio.networkState,
+          readyState: audio.readyState,
+          src: audio.src,
+          currentSrc: audio.currentSrc,
+          error: audio.error,
+          NETWORK_EMPTY: audio.NETWORK_EMPTY,
+          NETWORK_IDLE: audio.NETWORK_IDLE,
+          NETWORK_LOADING: audio.NETWORK_LOADING,
+          NETWORK_NO_SOURCE: audio.NETWORK_NO_SOURCE
+        });
+        
+        if (audio.networkState === audio.NETWORK_NO_SOURCE) {
+          console.error('❌ Audio source not found!');
+          console.error('Trying to access:', audio.currentSrc || audio.src);
+          console.error('Please check:');
+          console.error('1. File exists at: audio/music.mp3');
+          console.error('2. File is accessible from browser');
+          console.error('3. No CORS issues');
+        } else if (audio.readyState === 0) {
+          console.warn('⚠️ Audio may not have loaded properly yet');
+        } else {
+          console.log('✅ Audio loaded successfully!');
+        }
+      }, 2000);
+      
+      // Set volume to 100% and ensure not muted
+      audio.volume = 1.0;
+      audio.muted = false;
+      console.log('Audio volume set to:', audio.volume, 'Muted:', audio.muted);
+      
+      // Play/Pause
+      playPauseBtn.addEventListener('click', async () => {
+        if (audio.paused) {
+          try {
+            // Ensure volume is at 100% and not muted
+            audio.volume = 1.0;
+            audio.muted = false;
+            
+            // Check audio state
+            console.log('Attempting to play audio:', {
+              src: audio.src,
+              currentSrc: audio.currentSrc,
+              networkState: audio.networkState,
+              readyState: audio.readyState,
+              volume: audio.volume,
+              muted: audio.muted,
+              error: audio.error
+            });
+            
+            // Check if audio source is valid
+            if (audio.networkState === audio.NETWORK_NO_SOURCE) {
+              console.error('Audio source not found');
+              alert('Audio file not found. Please check:\n1. File exists at audio/music.mp3\n2. File is a valid MP3\n3. Check browser console (F12) for details');
+              return;
+            }
+            
+            // Check if audio has error
+            if (audio.error) {
+              console.error('Audio has error:', audio.error);
+              alert('Audio error: ' + (audio.error.message || 'Unknown error') + '\nCheck browser console (F12) for details');
+              return;
+            }
+            
+            // Wait for audio to be ready if needed
+            if (audio.readyState < 2) {
+              console.log('Waiting for audio to be ready...');
+              await new Promise((resolve) => {
+                const checkReady = () => {
+                  if (audio.readyState >= 2) {
+                    resolve();
+                  } else {
+                    setTimeout(checkReady, 100);
+                  }
+                };
+                checkReady();
+              });
+            }
+            
+            await audio.play();
+            console.log('✅ Audio playing successfully');
+            console.log('Volume:', audio.volume, 'Muted:', audio.muted, 'Paused:', audio.paused);
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            
+            // Resume audio context if suspended (for visualizer)
+            if (audioContext && audioContext.state === 'suspended') {
+              await audioContext.resume();
+            }
+            
+            // Try to update visualizer (may fail due to CORS with file://, but that's OK)
+            try {
+              updateVisualizer();
+            } catch (e) {
+              console.log('Visualizer not available (CORS restriction) - audio still plays fine');
+            }
+          } catch (e) {
+            console.error('Play error:', e);
+            let errorMsg = 'Cannot play audio: ' + e.message;
+            if (e.name === 'NotAllowedError') {
+              errorMsg += '\n\nBrowser blocked autoplay. Please click the play button.';
+            } else if (e.name === 'NotSupportedError') {
+              errorMsg += '\n\nAudio format not supported.';
+            }
+            alert(errorMsg);
+          }
+        } else {
+          audio.pause();
+          playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+          }
+        }
+      });
+      
+      // Handle audio end
+      audio.addEventListener('ended', () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      });
+      
+      // Progress bar
+      progressBar.addEventListener('click', (e) => {
+        const rect = progressBar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = percent * audio.duration;
+      });
+      
+      // Update progress
+      audio.addEventListener('timeupdate', () => {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressFill.style.width = percent + '%';
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        updateLyrics(audio.currentTime);
+      });
+      
+      // Visualizer update - Cava style with logarithmic scaling
+      function updateVisualizer() {
+        if (!analyser || !dataArray) return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        const bars = visualizer.querySelectorAll('.visualizer-bar');
+        const maxFreq = dataArray.length;
+        
+        bars.forEach((bar, i) => {
+          // Logarithmic mapping for better visualization (like Cava)
+          const logIndex = Math.floor(Math.pow(i / bars.length, 1.5) * maxFreq);
+          const value = dataArray[logIndex] || 0;
+          
+          // Apply some scaling for better visual effect
+          const scaledValue = Math.pow(value / 255, 0.7) * 255;
+          const height = Math.max(3, Math.min(100, (scaledValue / 255) * 100));
+          bar.style.height = height + '%';
+          
+          // Add glow effect based on intensity
+          const opacity = scaledValue / 255;
+          bar.style.boxShadow = `0 0 ${8 + opacity * 12}px rgba(251, 191, 36, ${0.3 + opacity * 0.5})`;
+        });
+        
+        if (!audio.paused) {
+          animationFrameId = requestAnimationFrame(updateVisualizer);
+        }
+      }
+      
+      // Initialize lyrics
+      renderLyrics();
+    }
+    
+    // Lyrics
+    function renderLyrics() {
+      const container = document.getElementById('lyricsContainer');
+      container.innerHTML = '';
+      
+      lyrics.forEach((lyric, index) => {
+        const line = document.createElement('div');
+        line.className = 'lyric-line';
+        line.setAttribute('data-index', index);
+        line.innerHTML = `
+          <span class="lyric-time">[${formatLyricTime(lyric.time)}]</span>
+          <div class="lyric-chinese">${lyric.chinese}</div>
+          <div class="lyric-pinyin">${lyric.pinyin}</div>
+          <div class="lyric-indonesian">${lyric.indonesian}</div>
+        `;
+        container.appendChild(line);
+      });
+    }
+    
+    function formatLyricTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(2);
+      return `${mins}:${secs.padStart(5, '0')}`;
+    }
+    
+    function updateLyrics(currentTime) {
+      let newIndex = -1;
+      
+      for (let i = lyrics.length - 1; i >= 0; i--) {
+        if (currentTime >= lyrics[i].time) {
+          newIndex = i;
+          break;
+        }
+      }
+      
+      if (newIndex !== currentLyricIndex) {
+        // Remove previous active
+        document.querySelectorAll('.lyric-line.active').forEach(line => {
+          line.classList.remove('active');
+        });
+        
+        if (newIndex >= 0) {
+          const activeLine = document.querySelector(`.lyric-line[data-index="${newIndex}"]`);
+          if (activeLine) {
+            activeLine.classList.add('active');
+            // Scroll into view
+            activeLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+        
+        currentLyricIndex = newIndex;
+      }
+    }
+    
+    // Slides Animation
+    function initSlides() {
+      const slides = document.querySelectorAll('.slide');
+      const observerOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -150px 0px'
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Add delay based on slide index for staggered effect
+            const slideIndex = parseInt(entry.target.getAttribute('data-slide')) || 0;
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, slideIndex * 100);
+          }
+        });
+      }, observerOptions);
+      
+      slides.forEach(slide => {
+        observer.observe(slide);
+      });
+      
+      // Show first slide immediately
+      if (slides.length > 0) {
+        setTimeout(() => {
+          slides[0].classList.add('visible');
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>
